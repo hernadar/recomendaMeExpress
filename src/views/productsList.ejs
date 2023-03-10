@@ -3,18 +3,18 @@
 
 <%- include('partials/header') %>
 
-    <h1>LISTADO DE PRODUCTOS</h1>
+    <h1>Listado de Products de la Empresa <%=company.name %></h1>
     <br>
     <p>
-        <a class="botonAgregar" href="#">Agregar un productos</a>
+        <a class="botonAgregar" href="/companies/<%=company.id %>/products/register">Agregar un productos</a>
         <a class="botonVolver" href="/">Inicio</a>
 
     </p>
     <br>
     <ul>
-        <% for( let i = 0; i < productos.length; i++ ) { %>
+        <% for( let i = 0; i < products.length; i++ ) { %>
         <li>
-            <a href=""><%= products[i].name %></a>
+            <a href="/companies/<%=company.id %>/products/detail/<%=products[i].id%>"><%= products[i].name %></a>
         </li>
         <% } %>
 

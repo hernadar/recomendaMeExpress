@@ -3,7 +3,7 @@
 <%- include('partials/header') %>
 
 
-    <h1>Perfil de Empresa</h1>
+    <h1>Perfil de Empresa <%=company.name %></h1>
     <br>
     <p>
         
@@ -31,7 +31,6 @@
             <button>Editar</button>
         </a>
         <ul>
-            <% res.locals.company = company.id %>
             <li><a href='/companies/<%=company.id %>/products'>Productos</a></li>
         </ul>
     </div>   

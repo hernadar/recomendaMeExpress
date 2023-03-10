@@ -1,17 +1,17 @@
 var express = require('express');
 var router = express.Router();
 const path =require('path');
-const companiesController=require('../controllers/companiesController');
-const productsController=require('../controllers/productsController');
+const companiesApiController=require('../../controllers/api/companiesApiController');
+const productsApiController=require('../../controllers/api/productsApiController');
 
-const authMiddleware = require('../middlewares/authMiddleware');
+const authMiddleware = require('../../middlewares/authMiddleware');
 
 // Requiero Multer para recibir la imagen del perfil de usuario y lo configuro
 const multer=require('multer');
 
 const storageCompany = multer.diskStorage({
   destination: function(req, file, cb){
-    cb(null, path.join(__dirname, '../../public/images/logos'));
+    cb(null, path.join(__dirname, '../../../public/images/logos'));
   },
   filename: function(req,file,cb){
     
@@ -87,34 +87,34 @@ const validationsProduct=[
 ]
 
 // Lista de Empresas
-router.get('/', authMiddleware, companiesController.list);
+router.get('/', companiesApiController.list);
 // Formulario de registro de Empresa
-router.get('/register',authMiddleware, companiesController.register);
+router.get('/register',authMiddleware, companiesApiController.register);
 //Procesar el registro
-router.post('/register', uploadFileCompany.single('image'), validationsCompany, companiesController.processRegister);
+router.post('/register', uploadFileCompany.single('image'), validationsCompany, companiesApiController.processRegister);
 
 // Perfil de Empresa
-router.get('/profile/:idCompany', authMiddleware, companiesController.profile);
+router.get('/profile/:idCompany', companiesApiController.profile);
 // Editar Perfil de Empresa
-router.get('/profile/edit/:idCompany',authMiddleware, companiesController.edit);
-router.post('/profile/edit/:idCompany',authMiddleware, uploadFileCompany.single('image'), validationsCompany, companiesController.update);
+router.get('/profile/edit/:idCompany',authMiddleware, companiesApiController.edit);
+router.post('/profile/edit/:idCompany',authMiddleware, uploadFileCompany.single('image'), validationsCompany, companiesApiController.update);
 // Eliminar perfil de Empresa
-router.post('/profile/delete/:idCompany',authMiddleware, companiesController.delete);
+router.post('/profile/delete/:idCompany',authMiddleware, companiesApiController.delete);
 
 
 //Rutas de los productos de cada Empresa
 // Lista de Productos
-router.get('/:idCompany/products', authMiddleware, productsController.list);
+router.get('/:idCompany/products', productsApiController.list);
 // Formulario de registro de Producto
-router.get('/:idCompany/products/register',authMiddleware, productsController.register);
+router.get('/:idCompany/products/register',authMiddleware, productsApiController.register);
 //Procesar el registro de Producto
-router.post('/:idCompany/products/register', uploadFileProduct.single('image'),validationsProduct, productsController.processRegister);
+router.post('/:idCompany/products/register', uploadFileProduct.single('image'),validationsProduct, productsApiController.processRegister);
 // detalle de productos 
-router.get('/:idCompany/products/detail/:idProduct', authMiddleware, productsController.detail);
+router.get('/:idCompany/products/detail/:idProduct', authMiddleware, productsApiController.detail);
 // Editar detalle de producto
-router.get('/:idCompany/products/edit/:idProduct',authMiddleware, productsController.edit);
-router.post('/:idCompany/products/edit/:idProduct',authMiddleware, uploadFileProduct.single('image'), validationsProduct, productsController.update);
+router.get('/:idCompany/products/edit/:idProduct',authMiddleware, productsApiController.edit);
+router.post('/:idCompany/products/edit/:idProduct',authMiddleware, uploadFileProduct.single('image'), validationsProduct, productsApiController.update);
 // Eliminar Producto
-router.post('/:idCompany/products/delete/:idProduct',authMiddleware, productsController.delete);
+router.post('/:idCompany/products/delete/:idProduct',authMiddleware, productsApiController.delete);
 
 module.exports = router;

@@ -1,24 +1,26 @@
 const { validationResult }=require ('express-validator')
-const db= require('../database/models');
+const db= require('../../database/models');
 
 const controller = {
     list: (req,res) => {
-        let pedidoCompany = db.Company.findByPk(req.params.idCompany);
+        db.Product.findAll()
+            .then(function (products) {
+                let response = {
+                    meta: {
+                        status : 200,
+                        total: products.length,
+                        url: 'api/products'
+                    },
+                    data: products
+                }
+                    res.json(response);
+                })
+        .catch(function (e) {
+            console.log(e)
+        })
 
-        let pedidoproductos =  db.Product.findAll({
-            where: {
-              companies_id: req.params.idCompany
-            }
-          })
+       
 
-        Promise.all([pedidoCompany, pedidoproductos])
-            .then(function ([company, products]) {
-
-                return res.render('productsList', { company, products })
-            })
-            .catch(function (e) {
-                console.log(e)
-            })
     }, 
     register: (req,res) => {
         // console.log(req.params.idCompany)

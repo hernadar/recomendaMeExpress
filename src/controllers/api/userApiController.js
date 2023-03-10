@@ -1,13 +1,22 @@
 const { validationResult } = require('express-validator');
 const bcryptjs = require('bcryptjs');
-const db = require('../database/models');
+const db = require('../../database/models');
 
 const controller = {
     list: (req, res) => {
         db.User.findAll()
             .then(function (users) {
-                res.render('usersList', { users })
-            })
+                let response = {
+                    meta: {
+                        status : 200,
+                        total: users.length,
+                        url: 'api/users'
+                    },
+                    data: users
+                }
+                    res.json(response);
+                })
+            
             .catch(function (e) {
                 console.log(e)
             })
@@ -87,7 +96,16 @@ const controller = {
                             res.cookie('userEmail', req.body.email, { maxAge: (1000 * 60) *2})
                             console.log(req.cookies.userEmail)
                         }
-                        return res.redirect('/')
+                        let response = {
+                            meta: {
+                                status : 200,
+                                total: 1,
+                                url: 'api/users/login'
+                            },
+                            data: 'userLogged'
+                        }
+                            res.json(response);
+                        
                     } else {
                         console.log('Las credenciales son incorrectas')
                         return res.render('userlogin')
@@ -106,13 +124,24 @@ const controller = {
         db.User.findByPk(req.params.id, {
             include: [{ association: 'privileges' }]
         })
-            .then(function (user) {
-
-                return res.render('userDetail', { user })
-            })
-            .catch(function (e) {
+        .then(function (user) {
+                    
+                        
+             
+             let response = {
+                 meta: {
+                     status : 200,
+                     total: user.length,
+                     url: 'api/user/profile/:iduser'
+                 },
+                 data: user
+             }
+            res.json(response);
+           
+        })
+        .catch(function (e) {
                 console.log(e)
-            })
+        })
     },
 
     edit: (req, res) => {
