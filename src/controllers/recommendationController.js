@@ -113,10 +113,15 @@ const controller = {
     updatePresentar: (req, res) => {
         db.Recommendation.findByPk(req.params.id)
             .then(function (recommendation) {
-               
+                let date= new Date();
+                let year= date.getFullYear();
+                let month= date.getMonth()+1;
+                let day= date.getDate();
+                let dateToPresent = year + '-' + month+ '-' + day
                 let recommendationUpadate= {
                     ...recommendation,
-                    status:'pendiente'
+                    datePresent: dateToPresent,
+                    status: 'pendiente'
                     }
                 db.Recommendation.update(recommendationUpadate, {
                     where: {
@@ -138,9 +143,15 @@ const controller = {
     updateConfirmar: (req, res) => {
         db.Recommendation.findByPk(req.params.id)
             .then(function (recommendation) {
-                let userId = recommendation.users_id
+                var userId = recommendation.users_id
+                let date= new Date();
+                let year= date.getFullYear();
+                let month= date.getMonth()+1;
+                let day= date.getDate();
+                let dateToConfirm = year + '-' + month+ '-' + day
                 let recommendationUpadate= {
                     ...recommendation,
+                    dateConfirm: dateToConfirm,
                     status:'confirmada'
                     }
                 db.Recommendation.update(recommendationUpadate, {
@@ -149,38 +160,45 @@ const controller = {
                     }
                 })
                 .then(function(response) {
-                    res.redirect('/users/recommendation/')
-                })
-                .catch(function (e) {
-                    console.log(e)
-                })
-                db.User.findByPk(userId)
-                console.log(users)
-                .then(function(user) {
-                    let pointsToUpdate= parseint(user.points) + 1
-                    console.log(pointsToUpdate)
-                    let UserToUpdate = {
-                        ...user,
-                        points: pointsToUpdate
-                    }
-                    db.usern.update(UserToUpdate, {
-                        where: {
-                            id: userId
-                        }
-                    })
-                    .then(function(response) {
+
+                    db.User.findByPk(userId)          
+                    .then(function(user) {
                         
-                        res.redirect('/users/recommendation/')
+                        if (user.points===null) {
+                            var pointsToUpdate= 1
+                        } else {
+                            pointsToUpdate= points +1
+                        }
+                        
+                        console.log(pointsToUpdate)
+                        let UserToUpdate = {
+                            ...user,
+                            points: pointsToUpdate
+                        }
+                        db.User.update(UserToUpdate, {
+                            where: {
+                                id: userId
+                            }
+                        })
+                        .then(function(response) {
+                            
+                            res.redirect('/users/recommendation/')
+                        })
+                        .catch(function (e) {
+                            console.log(e)
+                        })
+    
+    
                     })
                     .catch(function (e) {
                         console.log(e)
                     })
-
-
+                    
                 })
                 .catch(function (e) {
                     console.log(e)
                 })
+
                 
             })
             .catch(function (e) {

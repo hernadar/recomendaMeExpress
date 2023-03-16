@@ -7,7 +7,7 @@ const controller = {
         
         db.Recommendation.findAll()
             .then(function (recommendations) {
-                console.log(recommendations)
+                
                 let response = {
                     meta: {
                         status : 200,
