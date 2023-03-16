@@ -34,6 +34,10 @@ module.exports = (sequelize, dataTypes) => {
         Company.belongsTo(models.Area, {
             as: 'areas',
             foreignKey:'areas_id',
+        })
+        Company.hasMany(models.Recommendation, {
+            as: 'recommendations',
+            foreignKey:'companies_id',
             
         })
     }

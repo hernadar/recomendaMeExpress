@@ -4,12 +4,12 @@ const path =require('path');
 const userController=require('../controllers/userController');
 const guestMiddleware = require('../middlewares/guestMiddleware');
 const authMiddleware = require('../middlewares/authMiddleware');
-
+const recommendationController=require('../controllers/recommendationController');
 // Requiero Multer para recibir la imagen del perfil de usuario y lo configuro
 const multer=require('multer');
 const storage = multer.diskStorage({
   destination: function(req, file, cb){
-      cb(null, path.join(__dirname, '../../public/images/avatars'));
+      cb(null, path.join(__dirname, '../../../recomendaMe/src/assets/images/avatars'));
   },
   filename: function(req,file,cb){
     
@@ -69,6 +69,17 @@ router.get('/profile/edit/:id',authMiddleware, userController.edit);
 router.post('/profile/edit/:id',authMiddleware,uploadFile.single('image'), validations, userController.update);
 // Eliminar perfil de usuario
 router.post('/profile/delete/:id',authMiddleware, userController.delete);
+// Listar Recmendaciones
+router.get('/recommendation/', recommendationController.list);
+// Formulario de registro de Recomendacion
+router.get('/recommendation/register', recommendationController.register);
+router.post('/recommendation/register', recommendationController.create);
+// Detalle de la Recomendacion
+router.get('/recommendation/detail/:id', recommendationController.detail);
+// Modificar Status a pendiente
+router.post('/recommendation/updatePresentar/:id', recommendationController.updatePresentar);
+// Modificar Status a confirmada
+router.post('/recommendation/updateConfirmar/:id', recommendationController.updateConfirmar);
 
 
 module.exports = router;

@@ -20,12 +20,12 @@ CREATE TABLE IF NOT EXISTS `recomendame`.`areas` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
+
 INSERT INTO `recomendame`.`areas` (`id`, `name`) VALUES ('1', 'Discoteca');
 INSERT INTO `recomendame`.`areas` (`id`, `name`) VALUES ('2', 'Gastronomia');
 INSERT INTO `recomendame`.`areas` (`id`, `name`) VALUES ('3', 'Bar');
 INSERT INTO `recomendame`.`areas` (`id`, `name`) VALUES ('4', 'Indumentaria');
 INSERT INTO `recomendame`.`areas` (`id`, `name`) VALUES ('5', 'Otros');
-
 
 -- -----------------------------------------------------
 -- Table `recomendame`.`companies`
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `recomendame`.`companies` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 11
+AUTO_INCREMENT = 24
 DEFAULT CHARACTER SET = utf8mb4;
 
 
@@ -63,9 +63,33 @@ DEFAULT CHARACTER SET = utf8mb4;
 -- Dumping data for table `privileges`
 LOCK TABLES `privileges` WRITE;
 /*!40000 ALTER TABLE `privileges` DISABLE KEYS */;
-INSERT INTO `privileges` VALUES (1,'Recomendador'),(2,'Recomendado'),(3,'Administrador');
+INSERT INTO `privileges` VALUES (1,'Recomendador'),(2,'Recomendado'),(3,'Administrador'),(4,'Receptor');
 /*!40000 ALTER TABLE `privileges` ENABLE KEYS */;
 UNLOCK TABLES;
+-- -----------------------------------------------------
+-- Table `recomendame`.`products`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `recomendame`.`products` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  `description` VARCHAR(100) NULL DEFAULT NULL,
+  `category` VARCHAR(45) NULL DEFAULT NULL,
+  `price` DOUBLE NULL DEFAULT NULL,
+  `points` INT(11) NOT NULL,
+  `image` VARCHAR(45) NOT NULL,
+  `companies_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_products_companies1_idx` (`companies_id` ASC),
+  CONSTRAINT `fk_products_companies1`
+    FOREIGN KEY (`companies_id`)
+    REFERENCES `recomendame`.`companies` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 8
+DEFAULT CHARACTER SET = utf8mb4;
+
+
 -- -----------------------------------------------------
 -- Table `recomendame`.`users`
 -- -----------------------------------------------------
@@ -87,30 +111,35 @@ CREATE TABLE IF NOT EXISTS `recomendame`.`users` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 18
+AUTO_INCREMENT = 33
 DEFAULT CHARACTER SET = utf8mb4;
 
 
 -- -----------------------------------------------------
--- Table `recomendame`.`products`
+-- Table `recomendame`.`recommendations`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `recomendame`.`products` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
-  `description` VARCHAR(100) NOT NULL,
-  `category` VARCHAR(45) NOT NULL,
-  `price` DOUBLE NULL,
-  `points` INT NOT NULL,
-  `image` VARCHAR(45) NOT NULL,
+CREATE TABLE IF NOT EXISTS `recomendame`.`recommendations` (
+  `users_id` INT(11) NOT NULL,
   `companies_id` INT(11) NOT NULL,
+  `datePresent` DATE NULL DEFAULT NULL,
+  `dateConfirm` DATE NULL DEFAULT NULL,
+  `status` VARCHAR(45) NULL DEFAULT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),
-  INDEX `fk_products_companies1_idx` (`companies_id` ASC),
-  CONSTRAINT `fk_products_companies1`
+  INDEX `fk_users_has_companies_companies1_idx` (`companies_id` ASC),
+  INDEX `fk_users_has_companies_users1_idx` (`users_id` ASC),
+  CONSTRAINT `fk_users_has_companies_companies1`
     FOREIGN KEY (`companies_id`)
     REFERENCES `recomendame`.`companies` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_users_has_companies_users1`
+    FOREIGN KEY (`users_id`)
+    REFERENCES `recomendame`.`users` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

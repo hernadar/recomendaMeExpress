@@ -11,7 +11,7 @@ const multer=require('multer');
 
 const storageCompany = multer.diskStorage({
   destination: function(req, file, cb){
-    cb(null, path.join(__dirname, '../../../public/images/logos'));
+    cb(null, path.join(__dirname, '../../../recomendaMe/src/assets/images/logos'));
   },
   filename: function(req,file,cb){
     
@@ -23,7 +23,7 @@ const  uploadFileCompany = multer ({storage: storageCompany});
 
 const storageProduct = multer.diskStorage({
   destination: function(req, file, cb){
-    cb(null, path.join(__dirname, '../../public/images/products'));
+    cb(null, path.join(__dirname, '../../../recomendaMe/src/assets/images/products'));
   },
   filename: function(req,file,cb){
     

@@ -45,6 +45,10 @@ module.exports = (sequelize, dataTypes) => {
         User.belongsTo(models.Privilege, {
             as: 'privileges',
             foreignKey:'privileges_id',
+        })
+        User.hasMany(models.Recommendation, {
+            as: 'recommendations',
+            foreignKey:'users_id',
             
         })
     }

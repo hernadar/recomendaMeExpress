@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const path =require('path');
 const usersApiController=require('../../controllers/api/userApiController');
+const recommendationApiController=require('../../controllers/api/recommendationApiController');
 const guestMiddleware = require('../../middlewares/guestMiddleware');
 const authMiddleware = require('../../middlewares/authMiddleware');
 
@@ -9,7 +10,7 @@ const authMiddleware = require('../../middlewares/authMiddleware');
 const multer=require('multer');
 const storage = multer.diskStorage({
   destination: function(req, file, cb){
-      cb(null, path.join(__dirname, '../../../public/images/avatars'));
+      cb(null, path.join(__dirname, '../../../recomendaMe/src/assets/images/avatars'));
   },
   filename: function(req,file,cb){
     
@@ -69,6 +70,18 @@ router.get('/profile/edit/:id',authMiddleware, usersApiController.edit);
 router.post('/profile/edit/:id',authMiddleware,uploadFile.single('image'), validations, usersApiController.update);
 // Eliminar perfil de usuario
 router.post('/profile/delete/:id',authMiddleware, usersApiController.delete);
+
+// Listar Recmendaciones
+router.get('/recommendation/', recommendationApiController.list);
+// Formulario de registro de Recomendacion
+router.get('/recommendation/register', recommendationApiController.register);
+router.post('/recommendation/register', recommendationApiController.create);
+// Detalle de la Recomendacion
+router.get('/recommendation/detail/:id', recommendationApiController.detail);
+// Modificar Status a pendiente
+router.post('/recommendation/updatePresentar/:id', recommendationApiController.updatePresentar);
+// Modificar Status a confirmada
+router.post('/recommendation/updateConfirmar/:id', recommendationApiController.updateConfirmar);
 
 
 module.exports = router;
