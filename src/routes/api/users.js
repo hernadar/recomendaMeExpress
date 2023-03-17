@@ -13,7 +13,6 @@ const storage = multer.diskStorage({
       cb(null, path.join(__dirname, '../../../recomendaMe/src/assets/images/avatars'));
   },
   filename: function(req,file,cb){
-    
     cb(null, `${Date.now()}_img${path.extname(file.originalname)}`);
     
   }
@@ -54,7 +53,7 @@ const validations=[
 // Lista de usuarios
 router.get('/', usersApiController.list);
 // Formulario de registro de usuario
-router.get('/register', guestMiddleware, usersApiController.register);
+router.get('/register', usersApiController.register);
 //Procesar el registro
 router.post('/register', uploadFile.single('image'), validations, usersApiController.create);
 //Formulario de login
@@ -82,6 +81,10 @@ router.get('/recommendation/detail/:id', recommendationApiController.detail);
 router.post('/recommendation/updatePresentar/:id', recommendationApiController.updatePresentar);
 // Modificar Status a confirmada
 router.post('/recommendation/updateConfirmar/:id', recommendationApiController.updateConfirmar);
+// Buscar recomendación por código
+router.get('/recommendation/find/:code', recommendationApiController.findByCode);
 
+//Buscar recomendaciones por usuario
+router.get('/:id/recommendation', recommendationApiController.findByUser);
 
 module.exports = router;

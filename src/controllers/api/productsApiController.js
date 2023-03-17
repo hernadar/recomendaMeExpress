@@ -3,7 +3,7 @@ const db= require('../../database/models');
 
 const controller = {
     list: (req,res) => {
-        db.Product.findAll()
+        db.Product.findAll({where:{companies_id:req.params.idCompany}})
             .then(function (products) {
                 let response = {
                     meta: {

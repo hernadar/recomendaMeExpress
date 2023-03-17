@@ -4,6 +4,7 @@ const db = require('../../database/models');
 
 const controller = {
     list: (req, res) => {
+        
         db.User.findAll()
             .then(function (users) {
                 let response = {
@@ -34,7 +35,7 @@ const controller = {
     },
 
     create: (req, res) => {
-
+        console.log('pasó por acá')
         const resultValidation = validationResult(req);
 
         if (resultValidation.errors.length > 0) {
@@ -44,39 +45,29 @@ const controller = {
             return res.send(resultValidation)
         }
 
-        // Verifico si el usuario ya existe en la DB
+            let imageProfile
 
-        db.User.findOne({ where: { email: req.body.email } })
-            .then(function (userInDB) {
-                if (userInDB) {
-                    return res.send('el usuario ya existe');//le tengo que decir al front que el usuario ya existe
+            if (req.file == undefined) {
+                imageProfile = 'user.png'
                 } else {
-                    let imageProfile
-
-                    if (req.file == undefined) {
-                        imageProfile = 'user.png'
-                    } else {
-                        imageProfile = req.file.filename
-                    }
-                    // encrypto la contraseña 
-                    let userToCreate = {
-                        ...req.body,
-                        password: bcryptjs.hashSync(req.body.password, 10),
-                        image: imageProfile,
-                    }
-                    db.User.create(userToCreate)
-                        .then(function (response) {
-                            return res.redirect('/users/login')
-                        })
-                        .catch(function (e) {
-                            console.log(e)
-                        })
+                imageProfile = req.file.filename
                 }
-            })
-            .catch(function (e) {
-                console.log(e)
-            })
-
+            // encrypto la contraseña 
+                console.log(req.body)
+                   
+            let userToCreate = {
+                ...req.body,
+                image: imageProfile,
+                }
+            db.User.create(userToCreate)
+                .then(function (response) {
+                        return response
+                    })
+                .catch(function (e) {
+                        console.log(e)
+                    })
+                
+            
 
     },
 
@@ -85,6 +76,7 @@ const controller = {
     },
 
     loginProcess: (req,res) => {
+        
         db.User.findOne({ where: { email: req.body.email } })
             .then(function (userToLogin) { 
                 if(userToLogin) {

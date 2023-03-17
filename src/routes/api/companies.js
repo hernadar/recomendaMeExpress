@@ -3,7 +3,7 @@ var router = express.Router();
 const path =require('path');
 const companiesApiController=require('../../controllers/api/companiesApiController');
 const productsApiController=require('../../controllers/api/productsApiController');
-
+const recommendationApiController=require('../../controllers/api/recommendationApiController');
 const authMiddleware = require('../../middlewares/authMiddleware');
 
 // Requiero Multer para recibir la imagen del perfil de usuario y lo configuro
@@ -116,5 +116,6 @@ router.get('/:idCompany/products/edit/:idProduct',authMiddleware, productsApiCon
 router.post('/:idCompany/products/edit/:idProduct',authMiddleware, uploadFileProduct.single('image'), validationsProduct, productsApiController.update);
 // Eliminar Producto
 router.post('/:idCompany/products/delete/:idProduct',authMiddleware, productsApiController.delete);
-
+// Buscar Recomendaciones por Empresa
+router.get('/:idCompany/recommendation', recommendationApiController.findByCompany);
 module.exports = router;

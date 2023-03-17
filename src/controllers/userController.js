@@ -25,7 +25,7 @@ const controller = {
     },
 
     create: (req, res) => {
-
+        
         const resultValidation = validationResult(req);
 
         if (resultValidation.errors.length > 0) {
@@ -76,6 +76,7 @@ const controller = {
     },
 
     loginProcess: (req,res) => {
+ 
         db.User.findOne({ where: { email: req.body.email } })
             .then(function (userToLogin) { 
                 if(userToLogin) {
